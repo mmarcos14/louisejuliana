@@ -15,7 +15,7 @@ export const ContextProvider = ({ children }) => {
     withXSRFToken: true,
   });
 
-  // ✅ Get authenticated user
+  // Get authenticated user
   const getUser = async () => {
     try {
       const res = await api.get("/api/user");
@@ -27,7 +27,7 @@ export const ContextProvider = ({ children }) => {
     }
   };
 
-  // ✅ Login
+  //  Login
   const login = async (url, data) => {
     try {
       setErrors({});
@@ -41,7 +41,7 @@ export const ContextProvider = ({ children }) => {
     }
   };
 
-  // ✅ Logout
+  //  Logout
   const logout = async () => {
     await api.post("/logout");
     setUser(null);

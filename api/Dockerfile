@@ -1,21 +1,22 @@
-FROM php:8.2-cli
+FROM php:8.2-apache
 
+# Installer extensions nécessaires
 RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    libpq-dev \
-    zip
+    git unzip libzip-dev \
+    && docker-php-ext-install pdo pdo_mysql zip
 
-RUN docker-php-ext-install pdo pdo_pgsql
+# Installer Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-WORKDIR /app
+WORKDIR /var/www/html
 
 COPY . .
 
-RUN composer install --optimize-autoloader --no-dev
+RUN composer install --no-interaction --optimize-autoloader
 
-EXPOSE 10000
+# Permissions Laravel (IMPORTANT)
+RUN chown -R www-data:www-data storage bootstrap/cache
+RUN chmod -R 775 storage bootstrap/cache
 
-CMD php artisan serve --host=0.0.0.0 --port=10000
+# Activer mod_rewrite
+RUN a2enmod rewrite

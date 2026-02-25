@@ -1,21 +1,28 @@
-FROM php:8.2-cli
+# Utilise PHP avec extensions pour Laravel
+FROM php:8.2-fpm
 
+# Installer des dépendances système
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
-    libpq-dev \
-    zip
+    libzip-dev \
+    && docker-php-ext-install pdo pdo_mysql zip
 
-RUN docker-php-ext-install pdo pdo_pgsql
+# Installer Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-WORKDIR /app
-
+# Copier le projet dans le container
+WORKDIR /var/www/html
 COPY . .
 
-RUN composer install --optimize-autoloader --no-dev
+# Installer les dépendances Laravel
+RUN composer install --no-interaction --optimize-autoloader
 
-EXPOSE 10000
+# Permissions pour storage et bootstrap/cache
+RUN chown -R www-data:www-data storage bootstrap/cache
+RUN chmod -R 775 storage bootstrap/cache
 
-CMD php artisan serve --host=0.0.0.0 --port=10000
+# Exposer le port PHP-FPM
+EXPOSE 9000
+
+CMD ["php-fpm"]

@@ -17,6 +17,11 @@ class UserController extends Controller
         return response()->json(['status'=>200,'user'=>$users]);
     }
 
+       public function index2()
+    {
+        $users=User::orderBy("id","ASC")->get();
+        return view('test',compact('users'));
+    }
     /**
      * Store a newly created resource in storage.
      */

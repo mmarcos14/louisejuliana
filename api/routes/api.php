@@ -18,17 +18,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
 Route::get('user/index',[UserController::class,'index']);
 Route::post('user/update',[UserController::class,'updateStatus']);
 Route::post('userProfil/update',[UserController::class,'updateProfil']);
-
-
-
-
     // Notes
     Route::get("notes/index", [NotesController::class, 'index']);
     Route::post("notes/store", [NotesController::class, 'store']);
     Route::delete("notes/delete/{id}", [NotesController::class, 'destroy']);
     Route::post("notes/update", [NotesController::class, 'update']);
-
-
 
     // Dépenses
     Route::get("depense/index", [DepenseController::class, 'index']);

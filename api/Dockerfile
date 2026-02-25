@@ -21,7 +21,8 @@ WORKDIR /var/www/html
 COPY . .
 
 RUN composer install --no-interaction --optimize-autoloader
-
+# Crée les tables Laravel
+RUN php artisan migrate --force
 # Permissions Laravel
 RUN chown -R www-data:www-data storage bootstrap/cache
 RUN chmod -R 775 storage bootstrap/cache
